@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.contrib.auth import models
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from report.models import Segment
+from report.models import CostCenterCategory, Segment
 from report.models import CostCenter
 from report.models import ReportItem
 from report.models import Reporter
@@ -15,9 +16,36 @@ class ReporterInline(admin.StackedInline):
 class UserAdmin(BaseUserAdmin):
   inlines = (ReporterInline,)
 
+class SegmentAdmin(admin.ModelAdmin):
+  list_display = ('segmentCode', 'segmentName')
+
+class CostCenterAdmin(admin.ModelAdmin):
+  list_display = (
+    'costCenterCode',
+    'costCenterName',
+    'segment',
+  )
+
+class ReportItemAdmin(admin.ModelAdmin):
+  list_display = (
+    'reportItemCode',
+    'reportItemName',
+    'formular',
+    'parent',
+    'costCenterCategory',
+  )
+
+class CostCenterCategoryAdmin(admin.ModelAdmin):
+  list_display = (
+    'name',
+    'code',
+  )
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Reporter)
-admin.site.register(Segment)
-admin.site.register(CostCenter)
-admin.site.register(ReportItem)
+admin.site.register(Segment, SegmentAdmin)
+admin.site.register(CostCenter, CostCenterAdmin)
+admin.site.register(ReportItem, ReportItemAdmin)
+admin.site.register(CostCenterCategory, CostCenterCategoryAdmin)
