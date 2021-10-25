@@ -1,29 +1,38 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
+
 class Segment(models.Model):
-  segmentCode = models.CharField(verbose_name="Mã cơ sở")
-  segmentName = models.CharField(verbose_name="Tên cơ sở")
+  segmentCode = models.CharField(verbose_name="Mã cơ sở", max_length=255)
+  segmentName = models.CharField(verbose_name="Tên cơ sở", max_length=255)
 
 class CostCenter(models.Model):
-  costCenterCode = models.CharField(verbose_name="Mã phòng ban")
-  costCenterName = models.CharField(verbose_name="Tên phòng ban")
-  segment = models.ForeignKey(Segment, verbose_name="Cơ sở")
+  costCenterCode = models.CharField(verbose_name="Mã phòng ban", max_length=255)
+  costCenterName = models.CharField(verbose_name="Tên phòng ban", max_length=255)
+  segment = models.ForeignKey(Segment, verbose_name="Cơ sở", on_delete=models.CASCADE)
 
+
+
+class RoleChoices(models.IntegerChoices):
+  Admin = 1
+  Reporter = 2
 class Reporter(models.Model):
-  role = models.IntegerField(verbose_name="Phân quyền")
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  role = models.IntegerField(verbose_name="Phân quyền", choices=RoleChoices.choices)
+
 
 class ReportItem(models.Model):
-  reportItemCode = models.CharField(verbose_name="Mã báo cáo")
-  reportItemName = models.CharField(verbose_name="Tên báo cáo")
+  reportItemCode = models.CharField(verbose_name="Mã báo cáo", max_length=255)
+  reportItemName = models.CharField(verbose_name="Tên báo cáo", max_length=255)
   amount = models.IntegerField(verbose_name="Số lượng")
-  formular = models.CharField(verbose_name="Công thức")
+  formular = models.CharField(verbose_name="Công thức", max_length=255)
   isParent = models.BooleanField(verbose_name="Là parent?")
   month = models.IntegerField(verbose_name="Tháng")
   year = models.IntegerField(verbose_name="Năm")
-  costCenter = models.ForeignKey(CostCenter, verbose_name="Cost Center")
-  reporter = models.ForeignKey(CostCenter, verbose_name="Cost Center")
+  costCenter = models.ForeignKey(CostCenter, verbose_name="Cost Center", on_delete=models.CASCADE)
+  reporter = models.ForeignKey(Reporter, verbose_name="Reporter", on_delete=models.CASCADE)
 
 
 # 1. Customize thông tin user
