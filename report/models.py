@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.deletion import CASCADE
 
 # Create your models here.
 
@@ -28,12 +29,17 @@ class ReportItem(models.Model):
   reportItemName = models.CharField(verbose_name="Tên báo cáo", max_length=255)
   amount = models.IntegerField(verbose_name="Số lượng")
   formular = models.CharField(verbose_name="Công thức", max_length=255)
-  isParent = models.BooleanField(verbose_name="Là parent?")
+  parent = models.ForeignKey(
+    'self',
+    null=True,
+    blank=True,
+    related_name='children',
+    on_delete=models.CASCADE
+  )
   month = models.IntegerField(verbose_name="Tháng")
   year = models.IntegerField(verbose_name="Năm")
   costCenter = models.ForeignKey(CostCenter, verbose_name="Cost Center", on_delete=models.CASCADE)
   reporter = models.ForeignKey(Reporter, verbose_name="Reporter", on_delete=models.CASCADE)
-
 
 # 1. Customize thông tin user
 # 2. Download file excel chứa các thông tin báo cáo về cơ sở
