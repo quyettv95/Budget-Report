@@ -1,0 +1,35 @@
+{% extends 'adminlte/base.html' %}
+{% block title %}Budget Report{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            <!-- general form elements -->
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title">Upload XLSX</h3>
+              </div>
+              <!-- /.box-header -->
+              <!-- form start -->
+              <form role="form" accept="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="box-body">
+                  <!-- <div class="form-group">
+                    <label for="exampleInputFile">File input</label>
+                    <input type="file" id="exampleInputFile">
+                    <p class="help-block">Example block-level help text here.</p>
+                  </div> -->
+                  {{ f }}
+                </div>
+                <!-- /.box-body -->
+
+                <div class="box-footer">
+                  <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.box -->
+
+          </div>
+    </div>
+
+{% endblock %}

@@ -13,11 +13,19 @@ class Segment(models.Model):
     return self.segmentName
 
 
+class CostCenterCategory(models.Model):
+  name = models.CharField(max_length=255)
+  code = models.CharField(max_length=255)
+
+  def __str__(self) -> str:
+    return self.name
+
+
 class CostCenter(models.Model):
   costCenterCode = models.CharField(verbose_name="Mã phòng ban", max_length=255)
   costCenterName = models.CharField(verbose_name="Tên phòng ban", max_length=255)
   segment = models.ForeignKey(Segment, verbose_name="Cơ sở", on_delete=models.CASCADE)
-
+  costCenterCategory = models.ForeignKey(CostCenterCategory, verbose_name="Danh mục Costcenter", on_delete=CASCADE, null=True)
   def __str__(self) -> str:
     return self.segment.segmentName + " --> " + self.costCenterName
 
@@ -25,18 +33,13 @@ class CostCenter(models.Model):
 
 class RoleChoices(models.IntegerChoices):
   Admin = 1
-  Reporter = 2
+  General_Manager = 2
+  Head_of_Department = 3
 class Reporter(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
+  costCenter = models.ForeignKey(CostCenter, verbose_name="Phòng ban", on_delete=CASCADE, null=True)
   role = models.IntegerField(verbose_name="Phân quyền", choices=RoleChoices.choices)
 
-
-class CostCenterCategory(models.Model):
-  name = models.CharField(max_length=255)
-  code = models.CharField(max_length=255)
-
-  def __str__(self) -> str:
-    return self.name
 
 class ReportItem(models.Model):
   reportItemCode = models.CharField(verbose_name="Mã báo cáo", max_length=255)
@@ -54,8 +57,6 @@ class ReportItem(models.Model):
 
   def __str__(self) -> str:
     return self.costCenterCategory.name + "-->" + self.reportItemName
-
-
 
 
 class BudgetTransaction(models.Model):

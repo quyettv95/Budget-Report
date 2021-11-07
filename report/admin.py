@@ -24,6 +24,7 @@ class CostCenterAdmin(admin.ModelAdmin):
     'costCenterCode',
     'costCenterName',
     'segment',
+    'costCenterCategory',
   )
 
 class ReportItemAdmin(admin.ModelAdmin):
